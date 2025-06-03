@@ -3,6 +3,7 @@ name: Keep Backend Awake
 on:
   schedule:
     - cron: "*/5 * * * *"  # every 5 minutes
+  workflow_dispatch:  # optional, allows manual runs
 
 jobs:
   ping-server:
@@ -10,4 +11,11 @@ jobs:
     steps:
       - name: Curl Ping to Keep Alive
         run: |
-          curl -m 10 --retry 5 https://moonai-backend.onrender.com/
+          # Wait up to 70 seconds (includes retries)
+          curl -A "Mozilla/5.0" \
+               --retry 5 \
+               --retry-delay 10 \
+               --retry-max-time 70 \
+               --max-time 60 \
+               https://moonai-backend.onrender.com/ \
+            || echo "Server did not respond in time, likely still waking up."
