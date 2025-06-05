@@ -13,7 +13,7 @@ jobs:
         run: |
           # Wait up to 70 seconds (includes retries)
           curl -A "Mozilla/5.0" \
-               --retry 5 \
+               --retry 2 \
                --retry-delay 10 \
                --retry-max-time 70 \
                --max-time 60 \
