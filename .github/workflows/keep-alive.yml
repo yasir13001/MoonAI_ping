@@ -9,8 +9,19 @@ jobs:
   ping-server:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Render server with retries
+      - name: Ping both Render servers with retries
         run: |
+          echo "Pinging moonai-api..."
+          curl -A "Mozilla/5.0" \
+               --retry 10 \
+               --retry-delay 6 \
+               --retry-max-time 70 \
+               --max-time 65 \
+               --connect-timeout 10 \
+               https://moonai-api.onrender.com/ \
+            || echo "moonai-api is still waking up, but we're keeping it warm."
+
+          echo "Pinging moonai-backend..."
           curl -A "Mozilla/5.0" \
                --retry 10 \
                --retry-delay 6 \
@@ -18,4 +29,4 @@ jobs:
                --max-time 65 \
                --connect-timeout 10 \
                https://moonai-backend.onrender.com/ \
-            || echo "Server is still waking up, but we're keeping it warm."
+            || echo "moonai-backend is still waking up, but we're keeping it warm."
